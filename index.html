@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Valentine</title>
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffd6e8;
+      font-family: Arial, sans-serif;
+    }
+
+    .wrap {
+      text-align: center;
+    }
+
+    .cute-gif {
+      width: 100px;
+      margin: 15px auto;
+      display: block;
+      border-radius: 14px;
+    }
+
+    h1 {
+      margin: 0 0 18px;
+      font-size: 42px;
+      font-weight: 800;
+      color: #000;
+    }
+
+    /* A "stage" so the No button can move but stays near the center */
+    .stage {
+      position: relative;     /* IMPORTANT: makes absolute children position inside this box */
+      width: 360px;
+      height: 120px;
+      margin: 0 auto;
+    }
+
+    button {
+      padding: 12px 26px;
+      font-size: 18px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+    }
+
+    #yes {
+      position: absolute;
+      left: 90px;
+      top: 40px;
+      background: #4CAF50;
+      color: white;
+    }
+
+    #no {
+      position: absolute;
+      left: 200px;
+      top: 40px;
+      background: #F44336;
+      color: white;
+      transition: left 0.15s ease, top 0.15s ease; /* optional smoothness */
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <img
+        src="cute-love-bear-roses.gif"
+        alt="cute love bear"
+        class="cute gif"
+    />
+
+    <h1 id="question">Will you be my Valentine? 💘</h1>
+
+
+    <div class="stage" id="stage">
+      <button id="yes">Yes</button>
+      <button id="no">No</button>
+    </div>
+  </div>
+
+  <script>
+    const noPhrases = [
+            "No",
+            "Are you sure? 😳",
+            "Really??",
+            "Think again 💭",
+            "Come on 🥺",
+            "Don't do this 😭",
+            "Last chance 😤",
+            "Okay wow 💀"
+    ];
+    let yesScale = 1;
+    let noClickCount = 0;
+    const stage = document.getElementById("stage");
+    const noBtn = document.getElementById("no");
+    const yesBtn = document.getElementById("yes");
+    const question = document.getElementById("question");
+
+    // Move NO button inside the stage so it never disappears off-screen
+    function moveNoButton() {
+      const padding = 10;
+
+      const stageRect = stage.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+
+      const maxX = stageRect.width - btnRect.width - padding;
+      const maxY = stageRect.height - btnRect.height - padding;
+
+      const x = padding + Math.random() * maxX;
+      const y = padding + Math.random() * maxY;
+
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+    }
+
+    // Use mouseenter so it triggers reliably
+    noBtn.addEventListener("mouseover", moveNoButton);
+    noBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      noClickCount++;
+
+      if (noClickCount < noPhrases.length) {
+        noBtn.textContent = noPhrases[noClickCount];
+      } else {
+        noBtn.textContent = "NOPE 😈";
+      }
+
+      yesScale += 1;
+      yesBtn.style.transform = `scale(${yesScale})`;
+
+      moveNoButton();
+    });
+    yesBtn.addEventListener("click", () => {
+      question.textContent = "YAY!!! 💖🥰";
+      stage.style.display = "none";
+    });
+  </script>
+</body>
+</html>
